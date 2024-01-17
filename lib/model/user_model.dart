@@ -1,43 +1,57 @@
-// class UserLoginModel{
-//   String? name;
-//   String? email;
-//   String? password;
-//   String? id;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-//   UserLoginModel({
-//     this.email,
-//     this.id,
-//     this.name,
-//     this.password
-//   });
+class UserData{
+  String? firstName;
+  String? lastName;
+  String? phoneNumber;
+  String? id;
+  String? imgUrl;
+  bool? isOnline;
 
-//   UserLoginModel.fromJson(Map<String, dynamic> json){
-//     {
-//       email = json['email'];
-//       name = json['name'];
-//       password = json['password'];
-//       id = json['id'];
-//     }
-//   }
+  UserData({
+    this.id,
+    this.firstName,
+    this.imgUrl,
+    this.lastName,
+    this.phoneNumber,
+    this.isOnline
+  });
 
-//   Map<String, dynamic> toJson() {
-//     return {
-//       'email': email,
-//       'name': name,
-//       'id': id,
-//       'password':password,
-//     };
-//   }
-// }
+  UserData.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? options
+    ){
+      final data = snapshot.data();
+    {
+      firstName = data!['firstName']??'';
+      phoneNumber = data['phoneNumber'];
+      lastName = data['lastName'];
+      id = data['id'];
+      imgUrl = data['imgUrl'];
+      isOnline = data['isOnline'];
+    }
+  }
 
-class UserModel{
+  Map<String, dynamic> toFirestore() {
+    return {
+      'phoneNumber': phoneNumber,
+      'firstName': firstName,
+      'id': id,
+      'imgUrl': imgUrl,
+      'lastName': lastName,
+      'isOnline' : isOnline
+    };
+  }
+}
+
+class UserProfileData{
   String? firstName;
   String? lastName;
   String? phoneNumber;
   String? id;
   String? imgUrl;
 
-  UserModel({
+  UserProfileData({
     this.id,
     this.firstName,
     this.imgUrl,
@@ -45,13 +59,14 @@ class UserModel{
     this.phoneNumber
   });
 
-  UserModel.fromJson(Map<String, dynamic> json){
+  UserProfileData.fromJson(Map<String, dynamic> data,
+    ){
     {
-      firstName = json['firstName'];
-      phoneNumber = json['phoneNumber'];
-      lastName = json['lastName'];
-      id = json['id'];
-      imgUrl = json['imgUrl'];
+      firstName = data!['firstName']??'';
+      phoneNumber = data['phoneNumber'];
+      lastName = data['lastName'];
+      id = data['id'];
+      imgUrl = data['imgUrl'];
     }
   }
 

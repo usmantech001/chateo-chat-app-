@@ -10,4 +10,6 @@ class AppColors{
 class AppConstants{
   static const SAVE_USER_PROFILE = 'save_user_profile';
   static const SAVE_USER_ID = 'save_user_id';
+  static const IS_LOGIN = 'is_login';
+  static const SAVE_CONTACT_LIST = 'save_contact_list';
 }

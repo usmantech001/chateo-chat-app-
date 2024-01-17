@@ -25,7 +25,7 @@ class BottomNavScreen extends StatelessWidget {
             items: [
               BottomNavigationBarItem(icon: Image.asset('assets/images/chats.png', height: 40,), label: 'Chats'),
               BottomNavigationBarItem(icon: Image.asset('assets/images/contact.png', height: 40,), label: 'Contacts'),
-              BottomNavigationBarItem(icon: Image.asset('assets/images/more.png', height: 40,), label: 'Mre'),
+              BottomNavigationBarItem(icon: Image.asset('assets/images/more.png', height: 40,), label: 'More'),
 
             ]
             ),

@@ -20,13 +20,20 @@ class StorageService extends GetxService{
     return await _prefs.setString(key, value);
   }
 
+  Future<bool> setStringList(String key, List<String> value) async{
+    return await _prefs.setStringList(key, value);
+  }
+
   String getString(String key) {
    return  _prefs.getString(key)??'';
    
   }
+  List<String>? getStringList(String key){
+   return  _prefs.getStringList(key);
+  }
 
  Future<bool> removeKey(String key) async {
-  
+   
     return await _prefs.remove(key);
   }
 }

@@ -5,9 +5,6 @@ import 'package:chateo/controller/userstore_controller.dart';
 import 'package:chateo/dep/init.dart' as dep;
 import 'package:chateo/route/app_pages.dart';
 import 'package:chateo/storage/storage_service.dart';
-import 'package:chateo/view/authentication/phone_sign_in_screen.dart';
-import 'package:chateo/view/authentication/sign_up_screen.dart';
-import 'package:chateo/view/onboard/onboard_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,7 +17,8 @@ Future<void> main() async {
       apiKey: "AIzaSyAemIL4gAHBIHnDvCEKP8Z3qhcRbWqtDz4", 
       appId: "1:166281742356:android:c2ae6f49be771403873f01", 
       messagingSenderId: "166281742356", 
-      projectId: "chateo-a7a4d"
+      projectId: "chateo-a7a4d",
+      storageBucket: "chateo-a7a4d.appspot.com"
       )
   ): await Firebase.initializeApp();
   await Get.putAsync(() => StorageService().init());
@@ -47,7 +45,7 @@ class MyApp extends StatelessWidget {
             useMaterial3: true,
           ),
           //home: SignUpScreen(),
-          initialRoute: AppRoute.PROFILE,
+          initialRoute: AppRoute.ONBOARD,
           getPages: AppRoute.pages,
         );
       }

@@ -8,12 +8,15 @@ Widget bigText({
   required String text,
    double fontSize = 25.0,
    FontWeight fontWeight = FontWeight.w700,
+   Color color = Colors.black,
+   TextOverflow overflow = TextOverflow.ellipsis
 }){
   return Text(  
     text, 
     textAlign: TextAlign.center,
+    overflow: overflow,
     style: TextStyle(
-      color: Colors.black,
+      color: color,
     fontSize: fontSize.sp,
     fontWeight: fontWeight,
   ),);
@@ -21,9 +24,11 @@ Widget bigText({
 Widget reusableText({
   required String text,
   Color color = AppColors.Black1,
-  double fontSize = 18
+  double fontSize = 18,
+   TextOverflow overflow = TextOverflow.ellipsis,
+  TextAlign textAlign = TextAlign.center
 }){
-  return Text(text, textAlign: TextAlign.center, style: TextStyle(color: color, fontSize: fontSize.sp),);
+  return Text(text, textAlign: textAlign, overflow: overflow, style: TextStyle(color: color, fontSize: fontSize.sp),);
 }
 Widget button({
   required String text,
@@ -166,4 +171,26 @@ Widget textFieldContainer({
                         ),
                        ),
                       );
+}
+
+Widget moreContainer({
+  required String imgPath,
+  required String text
+}){
+  return  Container(
+    padding: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 35.h),
+    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Image.asset('assets/images/${imgPath}.png', height: 20.h,),
+                            SizedBox(width: 10.w,),
+                            bigText(text: text, fontSize: 20.sp, color: Color(0xFF0F1828), fontWeight: FontWeight.w600)
+                          ],
+                        ),
+                        Icon(Icons.navigate_next, size:28.sp ,color: Color(0xFF0F1828),)
+                      ],
+                    ),
+  );
 }
