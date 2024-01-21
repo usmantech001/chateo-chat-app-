@@ -3,6 +3,7 @@ import 'package:chateo/controller/userstore_controller.dart';
 import 'package:chateo/model/msg_model.dart';
 import 'package:chateo/route/app_pages.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,14 +12,15 @@ class ChatListController extends GetxController{
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-  // chatListData();
+   //chatListData();
+   getUserToken();
   }
   @override
   void onReady() {
     // TODO: implement onReady
     super.onReady();
 
-    getChatListData();
+  //  getChatListData();
     chatListData();
  
   }
@@ -56,14 +58,22 @@ final id = UserStore.instance.getUserID();
     });
   }
 
-  chatListData(){
+  getUserToken() async{
+    var token =await FirebaseAuth.instance.currentUser!.getIdToken();
+    print('My token is $token');
+  }
+
+  chatListData() async {
+    chatData =[];
     var from_messages = db.collection('message').withConverter(
     fromFirestore: Msg.fromFirestore, 
     toFirestore: (Msg msg, options)=> msg.toFirestore()
     ).where('from_uid', isEqualTo:id ).snapshots().listen((event) {
-      chatData =[];
+      
       for(var change in event.docChanges){  
-        chatData.add(change.doc);
+       // chatData.add(change.doc);
+       chatData =[];
+        chatData.addAll(event.docs);
         update();
         print('The change doc is ${chatData.length}');
       }
@@ -74,8 +84,8 @@ final id = UserStore.instance.getUserID();
     ).where('to_uid', isEqualTo:id ).snapshots().listen((event) {
       
       for(var change in event.docChanges){
-        chatData =[];  
-        chatData.add(change.doc);
+        chatData =[];
+        chatData.addAll(event.docs);
         update();
         print('The second change doc is ${chatData.length}');
       }

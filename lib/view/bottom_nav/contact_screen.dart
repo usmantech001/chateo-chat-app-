@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chateo/controller/contact_controller.dart';
 import 'package:chateo/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -42,11 +43,12 @@ class ContactScreen extends StatelessWidget {
                           childCount: contactController.usersList.length,
                           (context, index){
                           var users = contactController.usersList[index];
+                          print(users.imgUrl);
                           return GestureDetector(
                            onTap: () => contactController.goToChat(users),
                             child: Container(
                               alignment: Alignment.center,
-                              height: 100.h,
+                              height: 70.h,
                               decoration: const BoxDecoration(
                                 border: Border(
                                   bottom: BorderSide(
@@ -60,7 +62,24 @@ class ContactScreen extends StatelessWidget {
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      Container(
+                                     users.imgUrl!=null? CachedNetworkImage(
+                                      imageUrl: users.imgUrl!,
+                                      fit: BoxFit.cover,
+                                      width: 50.w,
+                                      height: 50.h,
+                                      imageBuilder: (context, imageProvider) {
+                                        return Container(
+                                        
+                                        decoration: BoxDecoration(
+                                          
+                                          image: DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                                          borderRadius: BorderRadius.circular(15.sp),
+                                          //color: Colors.red
+                                        ),
+                                        
+                                        );
+                                      },
+                                     ): Container(
                                         height:50.h,
                                         width: 50.w,
                                         decoration: BoxDecoration(

@@ -6,12 +6,14 @@ import 'package:chateo/dep/init.dart' as dep;
 import 'package:chateo/route/app_pages.dart';
 import 'package:chateo/storage/storage_service.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
   Platform.isAndroid? await Firebase.initializeApp(
     options: const FirebaseOptions(
       apiKey: "AIzaSyAemIL4gAHBIHnDvCEKP8Z3qhcRbWqtDz4", 
@@ -21,6 +23,7 @@ Future<void> main() async {
       storageBucket: "chateo-a7a4d.appspot.com"
       )
   ): await Firebase.initializeApp();
+  await FirebaseMessaging.instance.getInitialMessage();
   await Get.putAsync(() => StorageService().init());
    Get.put(UserStore());
   await dep.init();

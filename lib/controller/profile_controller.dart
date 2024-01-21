@@ -6,7 +6,6 @@ import 'package:chateo/route/app_pages.dart';
 import 'package:chateo/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -60,22 +59,42 @@ bool isSaving = false;
     toFirestore: (UserData userdata, options)=>userdata.toFirestore()
     ).where('id', isEqualTo: userID).get();
     if(user.docs.isEmpty){
-
-        await db.collection('users').withConverter(
+      try{
+          await db.collection('users').withConverter(
     fromFirestore: UserData.fromFirestore, 
     toFirestore: (UserData userdata, options)=>userdata.toFirestore()
     ).add(userdata).then((value){
+      
       isSaving =false;
       update();
       UserStore.instance.login(true);
+      Get.snackbar('Success', 'Login Success', backgroundColor: AppColors.MainColor);
+      Get.offAllNamed(AppRoute.BOTTOMNAV);
     }
     );
-    }
-     isSaving =false;
+        
+      } catch (e){
+        isSaving =false;
+        update();
+
+      }
+      
+    }else{
+      try{
+         await db.collection('users').doc(user.docs.first.id).update(userdata.toFirestore()).then((value){
+        isSaving =false;
+        update();
+        UserStore.instance.login(true);
+        Get.snackbar('Success', 'Login Success', backgroundColor: AppColors.MainColor);
+        Get.offAllNamed(AppRoute.BOTTOMNAV);
+      });
+
+      }catch (e){
+        isSaving =false;
       update();
-    UserStore.instance.login(true);
-    Get.snackbar('Success', 'Login Success', backgroundColor: AppColors.MainColor);
-    Get.offAllNamed(AppRoute.BOTTOMNAV);
+      }
+     
+    }
   }
  }
 
@@ -119,4 +138,11 @@ bool isSaving = false;
    imgUrl = await spaceRef.getDownloadURL();
    update();
  }
-}
+//  updateUserProfile() async{
+//   try{
+//     await db.collection('users').doc().update();
+//   }catch (e){
+
+//   }
+//  }
+ }

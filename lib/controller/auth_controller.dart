@@ -5,6 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController{
+  @override
+  void onInit()async {
+    // TODO: implement onInit
+    super.onInit();
+   var token = await auth.currentUser!.getIdToken();
+   print('My token is $token');
+  }
   static  AuthController get instance => Get.find();
  final nameController = TextEditingController();
  final emailController = TextEditingController();
@@ -79,6 +86,7 @@ class AuthController extends GetxController{
  }
 
  verifyPhoneNumber(String phoneNumber) async {
+  
   isVerifyingPhoneNumber =true;
   update();
   try{
@@ -121,7 +129,8 @@ class AuthController extends GetxController{
   try{
      final userCredential= await auth.signInWithCredential(PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode));
      if(userCredential.user!=null){
-       
+      var token =await userCredential.user!.getIdToken();
+       print('The token is ${token}');
       isVerifyingOtp =false;
       update();
 
