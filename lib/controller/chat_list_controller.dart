@@ -12,12 +12,9 @@ class ChatListController extends GetxController{
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-   //chatListData();
-   getUserToken();
   }
   @override
   void onReady() {
-    // TODO: implement onReady
     super.onReady();
 
   //  getChatListData();
@@ -33,6 +30,7 @@ final id = UserStore.instance.getUserID();
  String to_uid ='';
  String to_name ='';
  String to_imgUrl = '';
+ String to_token = '';
 
 
   getChatListData() async{
@@ -58,11 +56,6 @@ final id = UserStore.instance.getUserID();
     });
   }
 
-  getUserToken() async{
-    var token =await FirebaseAuth.instance.currentUser!.getIdToken();
-    print('My token is $token');
-  }
-
   chatListData() async {
     chatData =[];
     var from_messages = db.collection('message').withConverter(
@@ -75,7 +68,6 @@ final id = UserStore.instance.getUserID();
        chatData =[];
         chatData.addAll(event.docs);
         update();
-        print('The change doc is ${chatData.length}');
       }
     });
     var to_messages = db.collection('message').withConverter(
@@ -87,7 +79,6 @@ final id = UserStore.instance.getUserID();
         chatData =[];
         chatData.addAll(event.docs);
         update();
-        print('The second change doc is ${chatData.length}');
       }
     });
     
@@ -98,19 +89,23 @@ final id = UserStore.instance.getUserID();
       to_uid = user.data()!.to_uid!??'';
       to_name = user.data()!.to_name??'';
       to_imgUrl = user.data()!.to_imgUrl??'';
+      to_token = user.data()!.to_token??'';
       update();
     }else{
        to_uid = user.data()!.from_uid!;
       to_name = user.data()!.from_name??'';
       to_imgUrl = user.data()!.from_imgUrl??'';
+      to_token = user.data()!.from_token??'';
       update();
     }
      Get.toNamed(AppRoute.PERSONAL_CHAT, parameters: {
           'doc_id' : user.id,
           'to_uid': to_uid,
           'to_name': to_name,
-          'to_imgUrl': to_imgUrl
-        });
+          'to_imgUrl': to_imgUrl,
+          'to_token' : to_token
+        }
+        );
   }
 
   String imgUrl(DocumentSnapshot<Msg> user){

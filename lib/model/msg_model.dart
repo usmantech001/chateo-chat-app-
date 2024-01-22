@@ -8,6 +8,8 @@ class Msg{
   String? last_msg;
   String? from_imgUrl;
   String? to_imgUrl;
+  String? from_token;
+  String? to_token;
   int? unread_msg;
   Timestamp? last_time;
 
@@ -20,7 +22,8 @@ class Msg{
     this.last_time,
     this.unread_msg,
     this.from_imgUrl,
-    this.to_imgUrl
+    this.to_imgUrl,
+    
   });
 
   Msg.fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot, SnapshotOptions? optionsfinal){
@@ -35,6 +38,7 @@ class Msg{
       last_time = data['last_time'];
       from_imgUrl = data['from_imgUrl'];
       to_imgUrl = data['to_imgUrl'];
+      
     }
   }
   Map<String, dynamic> toFirestore(){
@@ -47,7 +51,7 @@ class Msg{
       'unread_msg' : unread_msg,
       'last_time' : last_time,
       'from_imgUrl' : from_imgUrl,
-      'to_imgUrl' : to_imgUrl
+      'to_imgUrl' : to_imgUrl,
     };
   }
 }

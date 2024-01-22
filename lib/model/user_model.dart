@@ -7,6 +7,7 @@ class UserData{
   String? id;
   String? imgUrl;
   bool? isOnline;
+  String? token;
 
   UserData({
     this.id,
@@ -14,7 +15,8 @@ class UserData{
     this.imgUrl,
     this.lastName,
     this.phoneNumber,
-    this.isOnline
+    this.isOnline,
+    this.token
   });
 
   UserData.fromFirestore(
@@ -29,6 +31,7 @@ class UserData{
       id = data['id'];
       imgUrl = data['imgUrl'];
       isOnline = data['isOnline'];
+      token = data['token'];
     }
   }
 
@@ -39,7 +42,8 @@ class UserData{
       'id': id,
       'imgUrl': imgUrl,
       'lastName': lastName,
-      'isOnline' : isOnline
+      'isOnline' : isOnline,
+      'token' : token
     };
   }
 }

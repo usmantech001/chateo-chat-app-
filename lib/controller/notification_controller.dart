@@ -4,35 +4,19 @@ import 'package:get/get.dart';
 
 class NotificationController extends GetxController{
 static NotificationController get instance => Get.find();
-  final messaging = FirebaseMessaging.instance;
+  
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   @override
   void onInit() {
     // TODO: implement onInit
     super.onInit();
-    requestPermission();
-    requestDeviceToken();
     init();
   
   }
 
-  requestPermission() async {
-    NotificationSettings settings = await messaging.requestPermission();
-    if(settings.authorizationStatus== AuthorizationStatus.authorized){
-      print('User permission granted');
-    } else if( settings.authorizationStatus == AuthorizationStatus.provisional){
-      print('User granted provissional permission');
-    }else{
-      print('User declined or has not accepted permission');
-    }
+ 
 
-  }
-
-  requestDeviceToken() async{
-    await messaging.getToken().then((token){
-      print('the device token is $token');
-    });
-  }
+  
 
   init(){
     var androidInitialization = const AndroidInitializationSettings('@mipmap/ic_launcher');

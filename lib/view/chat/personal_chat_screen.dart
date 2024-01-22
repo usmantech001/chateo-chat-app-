@@ -37,7 +37,7 @@ class PersonalChatScreen extends StatelessWidget {
                     },
                     child:Platform.isIOS? Icon(Icons.navigate_before, size: 38.sp,):Icon(Icons.arrow_back_sharp, size: 25.sp,)),
                 ),
-               personalChatController.to_imgUrl!=null?CachedNetworkImage(
+               personalChatController.to_imgUrl!=''?CachedNetworkImage(
                                       imageUrl: personalChatController.to_imgUrl,
                                       fit: BoxFit.cover,
                                       width: 40.w,
@@ -54,7 +54,7 @@ class PersonalChatScreen extends StatelessWidget {
                   radius: 20.sp,
                   backgroundColor: AppColors.textFieldColor,
                   
-                                 child: Image.asset('assets/images/account.png', height: 30.h,),
+                                 child: Image.asset('assets/images/account.png', height: 20.h,),
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 10.w),

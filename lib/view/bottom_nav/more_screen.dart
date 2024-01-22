@@ -58,6 +58,7 @@ class MoreScreen extends StatelessWidget {
                                       imageBuilder: (context, imageProvider) {
                                         return CircleAvatar(
                                         //radius: 35.sp,
+                                        
                                        backgroundImage: imageProvider,
                                         
                                         );

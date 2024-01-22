@@ -5,6 +5,7 @@ import 'package:chateo/model/user_model.dart';
 import 'package:chateo/route/app_pages.dart';
 import 'package:chateo/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,7 +19,9 @@ XFile? image;
 File? imageFile;
 String? imgUrl;
 final db = FirebaseFirestore.instance;
+final messaging = FirebaseMessaging.instance;
 bool isSaving = false;
+String deviceToken = '';
 
 @override
   void onInit() {
@@ -26,11 +29,31 @@ bool isSaving = false;
     super.onInit();
    userID= Get.parameters['userID']??'';
    phoneNumber = Get.parameters['phoneNumber']??'';
+
+    requestPermission();
+    requestDeviceToken();
   }
   final firstNameController = TextEditingController();
  final lastNameontroller = TextEditingController();
 
+ requestPermission() async {
+    NotificationSettings settings = await messaging.requestPermission();
+    if(settings.authorizationStatus== AuthorizationStatus.authorized){
+      print('User permission granted');
+    } else if( settings.authorizationStatus == AuthorizationStatus.provisional){
+      print('User granted provissional permission');
+    }else{
+      print('User declined or has not accepted permission');
+    }
 
+  }
+requestDeviceToken() async{
+    await messaging.getToken().then((token){
+      deviceToken = token??'';
+      update();
+      print('the device token is $token');
+    });
+  }
  saveUserProfile() async {
   if(firstNameController.text.isEmpty){
     errorSnackbar(title: 'Required', message: 'Please input your first name');
@@ -42,14 +65,17 @@ bool isSaving = false;
       id: userID,
       firstName: firstNameController.text.trim(),
       lastName: lastNameontroller.text.trim(),
-      phoneNumber: phoneNumber
+      phoneNumber: phoneNumber,
+      token: deviceToken,
+      isOnline: true
     );
     final userProfile = UserProfileData(
       imgUrl: imgUrl,
       id: userID,
       firstName: firstNameController.text.trim(),
       lastName: lastNameontroller.text.trim(),
-      phoneNumber: phoneNumber
+      phoneNumber: phoneNumber,
+      
     );
     
     UserStore.instance.saveUserDetails(userProfile.toJson());
@@ -68,7 +94,7 @@ bool isSaving = false;
       isSaving =false;
       update();
       UserStore.instance.login(true);
-      Get.snackbar('Success', 'Login Success', backgroundColor: AppColors.MainColor);
+      Get.snackbar('Success', 'Login Success', backgroundColor: AppColors.MainColor, colorText: Colors.white);
       Get.offAllNamed(AppRoute.BOTTOMNAV);
     }
     );

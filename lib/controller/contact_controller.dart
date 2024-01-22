@@ -166,7 +166,8 @@ class ContactController extends GetxController{
           to_uid: to_userdata.id,
           last_msg: '',
           last_time: Timestamp.now(),
-          unread_msg: 0
+          unread_msg: 0,
+          
         );
         await db.collection('message').withConverter(
       fromFirestore: Msg.fromFirestore, 
@@ -176,7 +177,8 @@ class ContactController extends GetxController{
           'doc_id' : value.id,
           'to_uid': to_userdata.id??'',
           'to_name': to_userdata.firstName??'',
-          'imgUrl': to_userdata.imgUrl??''
+          'imgUrl': to_userdata.imgUrl??'',
+          'to_token' : to_userdata.token??''
         });
          print('The from_messages doc is ${from_messages.docs} ');
         print('The to_messages doc is ${to_messages.docs} ');
@@ -188,7 +190,8 @@ class ContactController extends GetxController{
           'doc_id' : from_messages.docs.first.id,
           'to_uid': to_userdata.id??'',
           'to_name': to_userdata.firstName??'',
-          'imgUrl': to_userdata.imgUrl??''
+          'imgUrl': to_userdata.imgUrl??'',
+          'to_token' : to_userdata.token??''
         });
         }
          if(to_messages.docs.isNotEmpty){
@@ -196,7 +199,8 @@ class ContactController extends GetxController{
           'doc_id' : to_messages.docs.first.id,
           'to_uid': to_userdata.id??'',
           'to_name': to_userdata.firstName??'',
-          'to_imgUrl': to_userdata.imgUrl??''
+          'to_imgUrl': to_userdata.imgUrl??'',
+          'to_token' : to_userdata.token??''
         });
         }
       }
