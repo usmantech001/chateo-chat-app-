@@ -10,7 +10,6 @@ final auth = FirebaseAuth.instance;
 
   @override
   Future<void> onInit() async {
-    // TODO: implement onInit
     super.onInit();
    await emailVerification();
     setAutoRedirect();

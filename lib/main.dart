@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:chateo/constants/constants.dart';
+import 'package:chateo/controller/contact_controller.dart';
 import 'package:chateo/controller/userstore_controller.dart';
 import 'package:chateo/dep/init.dart' as dep;
 import 'package:chateo/route/app_pages.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+   // Get.find<ContactController>().savedContact();
     return ScreenUtilInit(
       designSize: const Size(392, 783),
       builder: (_,context) {

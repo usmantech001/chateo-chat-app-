@@ -9,8 +9,6 @@ class AuthController extends GetxController{
   void onInit()async {
     // TODO: implement onInit
     super.onInit();
-   var token = await auth.currentUser!.getIdToken();
-   print('My token is $token');
   }
   static  AuthController get instance => Get.find();
  final nameController = TextEditingController();
@@ -61,6 +59,7 @@ class AuthController extends GetxController{
  emailVerification() async {
   try{
     await auth.currentUser!.sendEmailVerification();
+  // ignore: empty_catches
   }catch (e){
 
   }
@@ -129,8 +128,8 @@ class AuthController extends GetxController{
   try{
      final userCredential= await auth.signInWithCredential(PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode));
      if(userCredential.user!=null){
-      var token =await userCredential.user!.getIdToken();
-       print('The token is ${token}');
+      // var token =await userCredential.user!.getIdToken();
+      //  print('The token is ${token}');
       isVerifyingOtp =false;
       update();
 

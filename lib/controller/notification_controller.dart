@@ -30,13 +30,7 @@ static NotificationController get instance => Get.find();
     print('.............................onMessage...................');
     print('The message title is ${message.notification!.title} and The message body is ${message.notification!.title}');
 
-    
-
-    // BigPictureStyleInformation bigPictureStyleInformation = 
-    // BigPictureStyleInformation(
-    //   ,
-    // htmlFormatContent: true, contentTitle: message.notification!.title, htmlFormatContentTitle: true, 
-    // )
+  
 
     AndroidNotificationDetails androidNotificationDetails =const AndroidNotificationDetails('chateo', 'chateo', importance: Importance.high, playSound: true, priority: Priority.high);
     NotificationDetails notificationDetails = NotificationDetails(android: androidNotificationDetails);

@@ -48,7 +48,7 @@ class PhoneSignInScreen extends StatelessWidget {
                                      },
                                     
                                      initialSelection: 'NG',
-                                     favorite: ['+234','NG'],
+                                     favorite: const ['+234','NG'],
                                      showCountryOnly: false,
                                      showOnlyCountryWhenClosed: false,
                                      alignLeft: false,

@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chateo/controller/more_controller.dart';
-import 'package:chateo/controller/userstore_controller.dart';
 import 'package:chateo/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -23,7 +22,7 @@ class MoreScreen extends StatelessWidget {
             //  height: 100,
             child:  Column(
               children: [
-                bigText(text: 'More', color: Color(0xFF0F1828)),
+                bigText(text: 'More', color: const Color(0xFF0F1828)),
               ],
             ),
             ),
@@ -31,7 +30,7 @@ class MoreScreen extends StatelessWidget {
           ),
           backgroundColor: Colors.white,
           body:SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
                 Material(
@@ -76,13 +75,13 @@ class MoreScreen extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       bigText(text: '${moreController.profileData!.firstName??''} ${moreController.profileData!.lastName??''}', fontSize: 20.sp),
-                                      reusableText(text: moreController.profileData!.phoneNumber??'', color: Color(0xFFADB5BD))
+                                      reusableText(text: moreController.profileData!.phoneNumber??'', color: const Color(0xFFADB5BD))
                                     ],
                                   ),
                                 )
                               ],
                             ),
-                            Icon(Icons.navigate_next, size:28.sp ,color: Color(0xFF0F1828),)
+                            Icon(Icons.navigate_next, size:28.sp ,color: const Color(0xFF0F1828),)
                           ],
                         )
                       ],

@@ -17,7 +17,7 @@ class VerifyEmailScreen extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: Column(
               children: [
-                Container(
+                SizedBox(
                   height: 330.h,
                   width: MediaQuery.sizeOf(context).width,
 

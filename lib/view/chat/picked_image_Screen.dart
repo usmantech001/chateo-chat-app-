@@ -4,7 +4,6 @@ import 'package:chateo/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 
 class PickedImageScreen extends StatelessWidget {
   const PickedImageScreen({super.key});
@@ -21,10 +20,10 @@ class PickedImageScreen extends StatelessWidget {
                 left: 20.w,
                 child: GestureDetector(
                   onTap: () => Get.back(),
-                  child: Icon(Icons.cancel))),
+                  child: const Icon(Icons.cancel))),
                Align(
                 alignment: Alignment.center,
-                child:personalChatController.isUploadingImage==true?CircularProgressIndicator(): ConstrainedBox(
+                child:personalChatController.isUploadingImage==true?const CircularProgressIndicator(): ConstrainedBox(
                   constraints: BoxConstraints(
                     maxWidth: MediaQuery.sizeOf(context).width,
                     maxHeight: 330.h 

@@ -29,7 +29,7 @@ class ChatScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       bigText(text: 'Chats'),
-                      Icon(Icons.more_vert),
+                      const Icon(Icons.more_vert),
                     ],
                   ),
                 ),
@@ -41,7 +41,7 @@ class ChatScreen extends StatelessWidget {
                 ),
                 Expanded(
                   child: CustomScrollView(
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     slivers: [
                       SliverPadding(
                         padding:
@@ -64,7 +64,7 @@ class ChatScreen extends StatelessWidget {
                                         bottom: BorderSide(
                                   color: Color(0xFFEDEDED),
                                 ))),
-                                child: Container(
+                                child: SizedBox(
                                   height: 50.h,
 
                                   // color: Colors.black,
@@ -75,12 +75,13 @@ class ChatScreen extends StatelessWidget {
                                       chatListController.imgUrl(users) == ''
                                           ? CircleAvatar(
                                               radius: 27.sp,
-                                              child: Icon(
+                                              
+                                              backgroundColor:
+                                                  Colors.grey.shade200,
+                                                  child:const  Icon(
                                                 Icons.person,
                                                 color: Colors.grey,
                                               ),
-                                              backgroundColor:
-                                                  Colors.grey.shade200,
                                             )
                                           : CachedNetworkImage(
                                             height: 60.h,
@@ -96,33 +97,23 @@ class ChatScreen extends StatelessWidget {
                                                       '',
                                               errorWidget:
                                                   (context, url, error) =>
-                                                      Icon(Icons.person),
+                                                      const Icon(Icons.person),
                                               imageBuilder:
                                                   (context, imageProvider) {
                                                 return CircleAvatar(
-                                                  //radius: 35.sp,
-
                                                   backgroundImage:
                                                       imageProvider,
                                                 );
                                               },
                                             ),
-                                      // Container(
-                                      //   height:50.h,
-                                      //   width: 50.w,
-                                      //   decoration: BoxDecoration(
-                                      //     borderRadius: BorderRadius.circular(15.sp),
-                                      //     color: Colors.red
-                                      //   ),
-                                      //  // child: Image.asset('assets/images'),
-                                      // ),
+                                     
                                       SizedBox(
                                         width: 20.w,
                                       ),
                                       Padding(
                                         padding:
                                             EdgeInsets.symmetric(vertical: 2.h),
-                                        child: Container(
+                                        child: SizedBox(
                                           width: 200.w,
                                           child: Column(
                                             crossAxisAlignment:
@@ -147,7 +138,7 @@ class ChatScreen extends StatelessWidget {
                                                   text:
                                                       users.data()!.last_msg ??
                                                           '',
-                                                  color: Color(0xFFADB5BD))
+                                                  color: const Color(0xFFADB5BD))
                                             ],
                                           ),
                                         ),
@@ -167,23 +158,15 @@ class ChatScreen extends StatelessWidget {
                                                       .data()!
                                                       .last_time as Timestamp)
                                                   .toDate()),
-                                              color: Color(0xFFADB5BD),
+                                              color: const Color(0xFFADB5BD),
                                               fontSize: 14.w,
                                               fontWeight: FontWeight.w600,
                                             ),
-                                            // Container(
-                                            //   padding: EdgeInsets.all(5.sp),
-
-                                            //   decoration: BoxDecoration(
-                                            //     color: Color(0xFFD2D5F9),
-                                            //     borderRadius: BorderRadius.all(Radius.circular())
-                                            //   ),
-
-                                            //   child: Center(child: reusableText(text: '222', color: Color(0xFFADB5BD), fontSize: 15)))
-                                            CircleAvatar(
+                                            
+                                          chatListController.unreadMsg(users)==0?Container(): CircleAvatar(
                                               radius: 12,
                                               child: reusableText(
-                                                  text: '77', fontSize: 12),
+                                                  text: users.data()!.from_uid==chatListController.id?users.data()!.from_unread_msg.toString():users.data()!.to_unread_msg.toString(), fontSize: 12),
                                             )
                                           ],
                                         ),

@@ -15,9 +15,8 @@ class PersonalChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<PersonalChatController>(
-      builder: (personalChatController) {
-        return Scaffold(
-          
+        builder: (personalChatController) {
+      return Scaffold(
         backgroundColor: AppColors.textFieldColor,
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -32,119 +31,134 @@ class PersonalChatScreen extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(right: 10.w),
                   child: GestureDetector(
-                    onTap: () {
-                      Get.back();
-                    },
-                    child:Platform.isIOS? Icon(Icons.navigate_before, size: 38.sp,):Icon(Icons.arrow_back_sharp, size: 25.sp,)),
+                      onTap: () {
+                        Get.back();
+                        personalChatController.leavePersonalChat();
+                      },
+                      child: Platform.isIOS
+                          ? Icon(
+                              Icons.navigate_before,
+                              size: 38.sp,
+                            )
+                          : Icon(
+                              Icons.arrow_back_sharp,
+                              size: 25.sp,
+                            )),
                 ),
-               personalChatController.to_imgUrl!=''?CachedNetworkImage(
-                                      imageUrl: personalChatController.to_imgUrl,
-                                      fit: BoxFit.cover,
-                                      width: 40.w,
-                                      height: 40.h,
-                                      imageBuilder: (context, imageProvider) {
-                                        return CircleAvatar(
-                                        //radius: 35.sp,
-                                        
-                                       backgroundImage: imageProvider,
-                                        
-                                        );
-                                      },
-                                     ): CircleAvatar(
-                  radius: 20.sp,
-                  backgroundColor: AppColors.textFieldColor,
-                  
-                                 child: Image.asset('assets/images/account.png', height: 20.h,),
-                ),
+                personalChatController.to_imgUrl != ''
+                    ? CachedNetworkImage(
+                        imageUrl: personalChatController.to_imgUrl,
+                        fit: BoxFit.cover,
+                        width: 40.w,
+                        height: 40.h,
+                        imageBuilder: (context, imageProvider) {
+                          return CircleAvatar(
+                            //radius: 35.sp,
+
+                            backgroundImage: imageProvider,
+                          );
+                        },
+                      )
+                    : CircleAvatar(
+                        radius: 20.sp,
+                        backgroundColor: AppColors.textFieldColor,
+                        child: Image.asset(
+                          'assets/images/account.png',
+                          height: 20.h,
+                        ),
+                      ),
                 Container(
-                  margin: EdgeInsets.only(left: 10.w),
-                  height: 40,
-                  alignment: Alignment.centerLeft,
-                  width: 190.w,
-                 // color: Colors.red,
-                  child: bigText(text: personalChatController.to_name)),
-                  Expanded(child: Container()),
-                  Padding(
-                    padding: EdgeInsets.only(left: 5.w, right: 5.w),
-                    child: Icon(Icons.search),
-                  ),
-                  Icon(Icons.more_vert)
+                    margin: EdgeInsets.only(left: 10.w),
+                    height: 40,
+                    alignment: Alignment.centerLeft,
+                    width: 190.w,
+                    // color: Colors.red,
+                    child: bigText(text: personalChatController.to_name)),
+                Expanded(child: Container()),
+                Padding(
+                  padding: EdgeInsets.only(left: 5.w, right: 5.w),
+                  child:const Icon(Icons.search),
+                ),
+               const Icon(Icons.more_vert)
               ],
             ),
           ),
         ),
-          body: SafeArea(
-            child: Column(
-              children: [
-                const Expanded(child: ChatList()),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    margin: EdgeInsets.only(top: 0.h),
-                    padding: EdgeInsets.only(bottom: 10.h, right: 20.w, left: 10.w, top: 5.h),
-                    color: Colors.white,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                       // Image.asset('assets/images/add.png', height: 35,width: 35,),
-                       Expanded(
-                         child: Card(
+        body: SafeArea(
+          child: Column(
+            children: [
+              const Expanded(child: ChatList()),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  margin: EdgeInsets.only(top: 0.h),
+                  padding: EdgeInsets.only(
+                      bottom: 10.h, right: 20.w, left: 10.w, top: 5.h),
+                  color: Colors.white,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      // Image.asset('assets/images/add.png', height: 35,width: 35,),
+                      Expanded(
+                        child: Card(
                           color: AppColors.textFieldColor,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15)
-                          ),
-                           child: TextFormField(
-                            controller: personalChatController.messasgeController,
-                           expands: false,
+                              borderRadius: BorderRadius.circular(15)),
+                          child: TextFormField(
+                            controller:
+                                personalChatController.messasgeController,
+                            expands: false,
                             maxLines: 7,
                             minLines: 1,
                             keyboardType: TextInputType.multiline,
-                            decoration:const InputDecoration(
+                            decoration: const InputDecoration(
                               isDense: true,
                               hintText: 'send message...',
-                              hintStyle:  TextStyle(
-                                color: AppColors.hintTextColor
-                              ),
+                              hintStyle:
+                                  TextStyle(color: AppColors.hintTextColor),
                               //prefixIcon: Icon(Icons.person),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide.none,
-                                
                               ),
-                              focusedBorder:  OutlineInputBorder(
+                              focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide.none,
-                                
                               ),
                             ),
-                           ),
-                         ),
-                       ),
-                       Padding(
-                         padding: EdgeInsets.only(left: 10.w, bottom: 15.h),
-                         child: GestureDetector(
-                          onTap: () => personalChatController.pickImage(),
-                          child: Icon(Icons.image_outlined, size: 30.sp,)),
-                       ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 5.w, bottom: 15.h),
-                              child: GestureDetector(
-                                onTap: (){
-                                  if(personalChatController.messasgeController.text.isNotEmpty){
-                                    personalChatController.sendMessage();
-                                  }
-                                },
-                                child: Image.asset('assets/images/send.png', height: 35,width: 35,)
-                                ),
-                            ),
-                        
-                      ],
-                    ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 10.w, bottom: 15.h),
+                        child: GestureDetector(
+                            onTap: () => personalChatController.pickImage(),
+                            child: Icon(
+                              Icons.image_outlined,
+                              size: 30.sp,
+                            )),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 5.w, bottom: 15.h),
+                        child: GestureDetector(
+                            onTap: () {
+                              if (personalChatController
+                                  .messasgeController.text.isNotEmpty) {
+                                personalChatController.sendMessage();
+                              }
+                            },
+                            child: Image.asset(
+                              'assets/images/send.png',
+                              height: 35,
+                              width: 35,
+                            )),
+                      ),
+                    ],
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
-        );
-      }
-    );
+        ),
+      );
+    });
   }
 }

@@ -39,11 +39,8 @@ String deviceToken = '';
  requestPermission() async {
     NotificationSettings settings = await messaging.requestPermission();
     if(settings.authorizationStatus== AuthorizationStatus.authorized){
-      print('User permission granted');
     } else if( settings.authorizationStatus == AuthorizationStatus.provisional){
-      print('User granted provissional permission');
     }else{
-      print('User declined or has not accepted permission');
     }
 
   }
@@ -51,7 +48,6 @@ requestDeviceToken() async{
     await messaging.getToken().then((token){
       deviceToken = token??'';
       update();
-      print('the device token is $token');
     });
   }
  saveUserProfile() async {
@@ -80,16 +76,10 @@ requestDeviceToken() async{
     
     UserStore.instance.saveUserDetails(userProfile.toJson());
     UserStore.instance.setUserID(userID);
-  final user =await db.collection('users').withConverter(
-    fromFirestore: UserData.fromFirestore, 
-    toFirestore: (UserData userdata, options)=>userdata.toFirestore()
-    ).where('id', isEqualTo: userID).get();
+  final user =await db.collection('users').where('id', isEqualTo: userID).get();
     if(user.docs.isEmpty){
       try{
-          await db.collection('users').withConverter(
-    fromFirestore: UserData.fromFirestore, 
-    toFirestore: (UserData userdata, options)=>userdata.toFirestore()
-    ).add(userdata).then((value){
+          await db.collection('users').add(userdata.toJson()).then((value){
       
       isSaving =false;
       update();
@@ -107,11 +97,11 @@ requestDeviceToken() async{
       
     }else{
       try{
-         await db.collection('users').doc(user.docs.first.id).update(userdata.toFirestore()).then((value){
+         await db.collection('users').doc(user.docs.first.id).update(userdata.toJson()).then((value){
         isSaving =false;
         update();
         UserStore.instance.login(true);
-        Get.snackbar('Success', 'Login Success', backgroundColor: AppColors.MainColor);
+        Get.snackbar('Success', 'Login Success', backgroundColor: AppColors.MainColor, colorText: Colors.white);
         Get.offAllNamed(AppRoute.BOTTOMNAV);
       });
 

@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class UserData{
   String? firstName;
   String? lastName;
@@ -19,13 +17,9 @@ class UserData{
     this.token
   });
 
-  UserData.fromFirestore(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-    SnapshotOptions? options
-    ){
-      final data = snapshot.data();
+  UserData.fromJson(Map<String, dynamic>data){
     {
-      firstName = data!['firstName']??'';
+      firstName = data['firstName']??'';
       phoneNumber = data['phoneNumber'];
       lastName = data['lastName'];
       id = data['id'];
@@ -35,7 +29,7 @@ class UserData{
     }
   }
 
-  Map<String, dynamic> toFirestore() {
+  Map<String, dynamic> toJson() {
     return {
       'phoneNumber': phoneNumber,
       'firstName': firstName,
@@ -66,7 +60,7 @@ class UserProfileData{
   UserProfileData.fromJson(Map<String, dynamic> data,
     ){
     {
-      firstName = data!['firstName']??'';
+      firstName = data['firstName']??'';
       phoneNumber = data['phoneNumber'];
       lastName = data['lastName'];
       id = data['id'];

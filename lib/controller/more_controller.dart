@@ -8,7 +8,6 @@ class MoreController extends GetxController{
   UserProfileData? profileData;
  @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     getUserDetails();
   }
@@ -16,6 +15,5 @@ class MoreController extends GetxController{
   getUserDetails(){
    String userDetails = UserStore.instance.getUserDetails();
      profileData = UserProfileData.fromJson(jsonDecode(userDetails));
-     print(profileData!.firstName??'');
   }
 }

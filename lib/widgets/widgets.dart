@@ -1,5 +1,4 @@
 import 'package:chateo/constants/constants.dart';
-import 'package:chateo/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -185,7 +184,7 @@ Widget moreContainer({required String imgPath, required String text}) {
         Row(
           children: [
             Image.asset(
-              'assets/images/${imgPath}.png',
+              'assets/images/$imgPath.png',
               height: 20.h,
             ),
             SizedBox(
@@ -194,14 +193,14 @@ Widget moreContainer({required String imgPath, required String text}) {
             bigText(
                 text: text,
                 fontSize: 20.sp,
-                color: Color(0xFF0F1828),
+                color: const Color(0xFF0F1828),
                 fontWeight: FontWeight.w600)
           ],
         ),
         Icon(
           Icons.navigate_next,
           size: 28.sp,
-          color: Color(0xFF0F1828),
+          color: const Color(0xFF0F1828),
         )
       ],
     ),

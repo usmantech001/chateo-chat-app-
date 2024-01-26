@@ -1,4 +1,3 @@
-import 'package:chateo/constants/constants.dart';
 import 'package:chateo/controller/auth_controller.dart';
 import 'package:chateo/controller/otp_controller.dart';
 import 'package:chateo/widgets/widgets.dart';

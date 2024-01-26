@@ -25,7 +25,14 @@ class OnboardScreen extends StatelessWidget {
               width: double.infinity,
               child: Image.asset('assets/images/chat_illustration.png',)),
               SizedBox(height: 50.h,),
-            bigText(text: 'Connect easily with your family and friends over countries'),
+              Text('Connect easily with your family and friends over countries', textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 25.sp,
+                fontWeight: FontWeight.w700,
+                color: Colors.black
+              ),
+              
+              )
             ],
            ),
 
