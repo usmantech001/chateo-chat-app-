@@ -48,13 +48,15 @@ class UserProfileData{
   String? phoneNumber;
   String? id;
   String? imgUrl;
+  String? deviceToken;
 
   UserProfileData({
     this.id,
     this.firstName,
     this.imgUrl,
     this.lastName,
-    this.phoneNumber
+    this.phoneNumber,
+    this.deviceToken
   });
 
   UserProfileData.fromJson(Map<String, dynamic> data,
@@ -65,6 +67,7 @@ class UserProfileData{
       lastName = data['lastName'];
       id = data['id'];
       imgUrl = data['imgUrl'];
+      deviceToken = data['deviceToken'];
     }
   }
 
@@ -74,7 +77,8 @@ class UserProfileData{
       'firstName': firstName,
       'id': id,
       'imgUrl': imgUrl,
-      'lastName': lastName
+      'lastName': lastName,
+      'deviceToken' : deviceToken
     };
   }
 }

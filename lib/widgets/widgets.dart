@@ -1,7 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chateo/constants/constants.dart';
+import 'package:chateo/controller/personal_chat_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:video_player/video_player.dart';
 
 Widget bigText(
     {required String text,
@@ -203,6 +206,41 @@ Widget moreContainer({required String imgPath, required String text}) {
           color: const Color(0xFF0F1828),
         )
       ],
+    ),
+  );
+}
+
+Widget pickedContent(BuildContext context) {
+  final personalChatController = PersonalChatController.instance;
+  if (personalChatController.imgUrl!.isEmpty) {
+    return AspectRatio(
+      aspectRatio: 16 / 9,
+      child: reusableText(text: 'It is a video'),
+    );
+  } else {
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+          maxWidth: MediaQuery.sizeOf(context).width, maxHeight: 330.h),
+      child: CachedNetworkImage(imageUrl: personalChatController.imgUrl!),
+    );
+  }
+}
+
+Widget fileRow({required IconData icon, required String name, required Function() onTap}) {
+  return Padding(
+    padding:EdgeInsets.only(bottom: 10.h),
+    child: GestureDetector(
+      onTap: onTap,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon),
+          SizedBox(
+            width: 8.w,
+          ),
+          reusableText(text: name)
+        ],
+      ),
     ),
   );
 }

@@ -71,7 +71,7 @@ requestDeviceToken() async{
       firstName: firstNameController.text.trim(),
       lastName: lastNameontroller.text.trim(),
       phoneNumber: phoneNumber,
-      
+      deviceToken: deviceToken
     );
     
     UserStore.instance.saveUserDetails(userProfile.toJson());

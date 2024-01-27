@@ -28,9 +28,9 @@ class ChatList extends StatelessWidget {
                 (context, index) {
                   var msgcontent = personalChatController.msgList[index];
                     if(msgcontent.uid==personalChatController.userId){
-                       return ChatRight(msgcontent);
+                       return msgcontent.isTheFirst ==true? ChatRight1(msgcontent, msgcontent.addtime!.toDate()):ChatRight(msgcontent);
                     }else{
-                      return ChatLeft(msgcontent);
+                      return msgcontent.isTheFirst ==true?ChatLeft1(msgcontent, msgcontent.addtime!.toDate()): ChatLeft(msgcontent);
                     }
                   
                 }

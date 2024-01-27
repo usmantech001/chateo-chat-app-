@@ -4,6 +4,7 @@ import 'package:chateo/controller/userstore_controller.dart';
 import 'package:chateo/model/msg_model.dart';
 import 'package:chateo/route/app_pages.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -20,6 +21,7 @@ class ChatListController extends GetxController {
 
     //  getChatListData();
     chatListData();
+   // checkConnectivity();
   }
 
   static ChatListController get instance => Get.find();
@@ -32,6 +34,7 @@ class ChatListController extends GetxController {
   String to_name = '';
   String to_imgUrl = '';
   String to_token = '';
+  String from_token = '';
   String from_name = '';
   String from_imgUrl = '';
   String from_uid = '';
@@ -105,6 +108,7 @@ class ChatListController extends GetxController {
       to_name = user.data()!.to_name ?? '';
       to_imgUrl = user.data()!.to_imgUrl ?? '';
       to_token = user.data()!.to_token ?? '';
+      from_token = user.data()!.from_token??'';
       from_imgUrl = user.data()!.from_imgUrl ?? '';
       from_name = user.data()!.from_name ?? '';
       from_uid = user.data()!.from_uid ?? '';
@@ -119,6 +123,7 @@ class ChatListController extends GetxController {
       to_name = user.data()!.from_name ?? '';
       to_imgUrl = user.data()!.from_imgUrl ?? '';
       to_token = user.data()!.from_token ?? '';
+      from_token = user.data()!.to_token??'';
       from_imgUrl = user.data()!.to_imgUrl ?? '';
       from_name = user.data()!.to_name ?? '';
       from_uid = user.data()!.to_uid ?? '';
@@ -133,6 +138,7 @@ class ChatListController extends GetxController {
       'to_uid': to_uid,
       'to_name': to_name,
       'to_imgUrl': to_imgUrl,
+      'from_token': from_token,
       'to_token': to_token,
       'from_name': from_name,
       'from_imgUrl': from_imgUrl,
@@ -141,6 +147,26 @@ class ChatListController extends GetxController {
       'to_unread_msg': to_unread_msg.toString(),
       'toActiveInPersonalChatScreen' : toActiveInPersonalChatScreen.toString(),
       'meActiveInPersonalChatScreen' : meActiveInPersonalChatScreen.toString(),
+       'alreadyStartedConversationToday' : user.data()!.alreadyStartedConversationToday.toString()
+    });
+  }
+
+  checkConnectivity() async{
+    final user= await db.collection('users').where('id', isEqualTo: id).get();
+    String doc_id= user.docs.first.id;
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) async { 
+      if(result == ConnectivityResult.none){
+print('There is no connection');
+         await db.collection('users').doc(doc_id).update({
+          'isOnline' : false
+         });
+      }else{
+        print('Connected');
+        await db.collection('users').doc(doc_id).update({
+          'isOnline' : true
+         });
+      }
+
     });
   }
 
@@ -159,4 +185,5 @@ class ChatListController extends GetxController {
       return user.data()!.to_unread_msg ?? 0;
     }
   }
+
 }

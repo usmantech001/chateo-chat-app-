@@ -11,45 +11,46 @@ class PickedImageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<PersonalChatController>(
-      builder: (personalChatController) {
-        return Scaffold(
-          body: Stack(
-            children: [
-              Positioned(
+        builder: (personalChatController) {
+      return Scaffold(
+        body: Stack(
+          children: [
+            Positioned(
                 top: 30.h,
                 left: 20.w,
                 child: GestureDetector(
-                  onTap: () => Get.back(),
-                  child: const Icon(Icons.cancel))),
-               Align(
-                alignment: Alignment.center,
-                child:personalChatController.isUploadingImage==true?const CircularProgressIndicator(): ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: MediaQuery.sizeOf(context).width,
-                    maxHeight: 330.h 
-                  ),
-                  child: CachedNetworkImage(
-                    imageUrl:personalChatController.imgUrl! ),
-                  ),
-              ),
-              Positioned(
+                    onTap: () => Get.back(), child: const Icon(Icons.cancel))),
+            Align(
+              alignment: Alignment.center,
+              child: personalChatController.isUploadingImage == true
+                  ? const CircularProgressIndicator()
+                  : pickedContent(context)
+            ),
+            Positioned(
                 bottom: 20.h,
                 right: 10.w,
                 left: 10.w,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    textFieldContainer(hintText: 'Add a caption', controller: personalChatController.imageTextController),
-                    SizedBox(height: 15.h,),
+                    textFieldContainer(
+                        hintText: 'Add a caption',
+                        controller: personalChatController.imageTextController),
+                    SizedBox(
+                      height: 15.h,
+                    ),
                     GestureDetector(
-                      onTap: () => personalChatController.sendImageMessage(),
-                      child: Image.asset('assets/images/send.png', height: 35,width: 35,))
+                        onTap: () => personalChatController.sendImageMessage(),
+                        child: Image.asset(
+                          'assets/images/send.png',
+                          height: 35,
+                          width: 35,
+                        ))
                   ],
                 ))
-            ],
-          ),
-        );
-      }
-    );
+          ],
+        ),
+      );
+    });
   }
 }

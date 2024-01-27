@@ -6,9 +6,11 @@ import 'package:chateo/route/app_pages.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_cloud_messaging_flutter/firebase_cloud_messaging_flutter.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 class PersonalChatController extends GetxController {
   static PersonalChatController get instance => Get.find();
@@ -16,10 +18,12 @@ class PersonalChatController extends GetxController {
   String to_uid = '';
   String to_name = '';
   String to_imgUrl = '';
+  String from_token = '';
   String to_token = '';
   String from_name = '';
   String from_imgUrl = '';
   String from_uid = '';
+  String last_time= '';
   XFile? image;
   File? pickedFile;
   late String userId;
@@ -39,20 +43,22 @@ class PersonalChatController extends GetxController {
   bool isUploadingImage = false;
   bool isUploadingVideo = false;
   bool isGettingImgUrl = false;
+  bool alreadyStartedConversationToday = false;
 
   @override
   void onInit() {
     super.onInit();
     userId = UserStore.instance.getUserID();
-
     doc_id = Get.parameters['doc_id'] ?? '';
     to_uid = Get.parameters['to_uid'] ?? '';
     to_name = Get.parameters['to_name'] ?? "";
     to_imgUrl = Get.parameters['to_imgUrl'] ?? '';
     to_token = Get.parameters['to_token'] ?? '';
+    from_token = Get.parameters['from_token'] ?? '';
     from_name = Get.parameters['from_name'] ?? '';
     from_imgUrl = Get.parameters['from_imgUrl'] ?? '';
     from_uid = Get.parameters['from_uid'] ?? '';
+    last_time = Get.parameters['last_time'] ?? '';
     String newfromUnreadMsg = Get.parameters['from_unread_msg'] ?? '0';
     fromUnreadMsg = int.parse(newfromUnreadMsg);
     String newtoUnreadMsg = Get.parameters['to_unread_msg'] ?? '0';
@@ -61,6 +67,10 @@ class PersonalChatController extends GetxController {
         Get.parameters['meActiveInPersonalChatScreen'] ?? 'false';
     String to_active_in_chat =
         Get.parameters['toActiveInPersonalChatScreen'] ?? 'false';
+    String conversationStarted =
+        Get.parameters['alreadyStartedConversationToday'] ?? 'false';
+    alreadyStartedConversationToday =
+        conversationStarted == 'true' ? true : false;
     update();
 
     if (meActiveInPersonalChatScreen != true) {
@@ -72,9 +82,6 @@ class PersonalChatController extends GetxController {
       update();
     }
     updateUnreadMessages();
-
-    print('The me active in chat is $meActiveInPersonalChatScreen');
-    print('The to active in chat is $toActiveInPersonalChatScreen');
   }
 
   @override
@@ -95,13 +102,24 @@ class PersonalChatController extends GetxController {
   }
 
   sendMessage() async {
+     var dateTimeNow = DateTime.now();
+      var currentDate = DateFormat('yMd').format(dateTimeNow);
+      var lastMsgDate = DateFormat('yMd').format(DateTime.parse(last_time));
+      if(currentDate!=lastMsgDate){
+        alreadyStartedConversationToday=false;
+        update();
+        await db.collection('message').doc(doc_id).update({
+            'alreadyStartedConversationToday': alreadyStartedConversationToday
+          });
+      }
     if (userId == from_uid) {
       if (toActiveInPersonalChatScreen == true) {
         final sendContent = MsgContent(
             message: messasgeController.text.trim(),
             uid: userId,
             type: 'text',
-            addtime: Timestamp.now());
+            addtime: Timestamp.now(),
+            isTheFirst: alreadyStartedConversationToday == true ? false : true);
         messasgeController.clear();
 
         await db
@@ -115,12 +133,22 @@ class PersonalChatController extends GetxController {
             .add(sendContent)
             .then((value) async {
           sendNotificationMsg(
-              title: to_name, body: sendContent.message!, image: from_imgUrl);
+              title: from_name, body: sendContent.message!, image: from_imgUrl, token: to_token);
           update();
+          var now = DateTime.now();
+          var messageDateTime = sendContent.addtime!.toDate();
+          var todaysDate = DateFormat('yMd').format(now);
+          var messageDate = DateFormat('yMd').format(messageDateTime);
+          if (todaysDate == messageDate &&
+              alreadyStartedConversationToday == false) {
+            alreadyStartedConversationToday = true;
+            update();
+          }
           await db.collection('message').doc(doc_id).update({
             'last_time': Timestamp.now(),
             'last_msg': sendContent.message,
-            'to_unread_msg': 0
+            'to_unread_msg': 0,
+            'alreadyStartedConversationToday': alreadyStartedConversationToday
           });
         });
         print('The toreadmsg1 is $toUnreadMsg');
@@ -131,7 +159,8 @@ class PersonalChatController extends GetxController {
             message: messasgeController.text.trim(),
             uid: userId,
             type: 'text',
-            addtime: Timestamp.now());
+            addtime: Timestamp.now(),
+            isTheFirst: alreadyStartedConversationToday == true ? false : true);
         messasgeController.clear();
 
         await db
@@ -145,12 +174,21 @@ class PersonalChatController extends GetxController {
             .add(sendContent)
             .then((value) async {
           sendNotificationMsg(
-              title: to_name, body: sendContent.message!, image: from_imgUrl);
+              title: from_name, body: sendContent.message!, image: from_imgUrl, token: to_token);
           update();
+          var now = DateTime.now();
+          var messageDateTime = sendContent.addtime!.toDate();
+          var todaysDate = DateFormat('yMd').format(now);
+          var messageDate = DateFormat('yMd').format(messageDateTime);
+          if (todaysDate == messageDate) {
+            alreadyStartedConversationToday = true;
+            update();
+          }
           await db.collection('message').doc(doc_id).update({
             'last_time': Timestamp.now(),
             'last_msg': sendContent.message,
-            'to_unread_msg': toUnreadMsg
+            'to_unread_msg': toUnreadMsg,
+            'alreadyStartedConversationToday': alreadyStartedConversationToday
           });
         });
         print('The toreadmsg is $toUnreadMsg');
@@ -163,7 +201,8 @@ class PersonalChatController extends GetxController {
             message: messasgeController.text.trim(),
             uid: userId,
             type: 'text',
-            addtime: Timestamp.now());
+            addtime: Timestamp.now(),
+            isTheFirst: alreadyStartedConversationToday == true ? false : true);
         messasgeController.clear();
 
         await db
@@ -177,13 +216,22 @@ class PersonalChatController extends GetxController {
             .add(sendContent)
             .then((value) async {
           sendNotificationMsg(
-              title: to_name, body: sendContent.message!, image: from_imgUrl);
+              title: to_name, body: sendContent.message!, image: to_imgUrl, token: from_token);
           // unreadMsg++;
           update();
+          var now = DateTime.now();
+          var messageDateTime = sendContent.addtime!.toDate();
+          var todaysDate = DateFormat('yMd').format(now);
+          var messageDate = DateFormat('yMd').format(messageDateTime);
+          if (todaysDate == messageDate) {
+            alreadyStartedConversationToday = true;
+            update();
+          }
           await db.collection('message').doc(doc_id).update({
             'last_time': Timestamp.now(),
             'last_msg': sendContent.message,
-            'from_unread_msg': 0
+            'from_unread_msg': 0,
+            'alreadyStartedConversationToday': alreadyStartedConversationToday
           });
         });
         print('The fromUnreadMsg is $fromUnreadMsg');
@@ -194,7 +242,8 @@ class PersonalChatController extends GetxController {
             message: messasgeController.text.trim(),
             uid: userId,
             type: 'text',
-            addtime: Timestamp.now());
+            addtime: Timestamp.now(),
+            isTheFirst: alreadyStartedConversationToday == true ? false : true);
         messasgeController.clear();
 
         await db
@@ -208,16 +257,26 @@ class PersonalChatController extends GetxController {
             .add(sendContent)
             .then((value) async {
           sendNotificationMsg(
-              title: to_name, body: sendContent.message!, image: from_imgUrl);
-          // unreadMsg++;
+              title: to_name, body: sendContent.message!, image: to_imgUrl, token: from_token);
           update();
+          var now = DateTime.now();
+          var messageDateTime = sendContent.addtime!.toDate();
+          var todaysDate = DateFormat('yMd').format(now);
+          var messageDate = DateFormat('yMd').format(messageDateTime);
+          if (todaysDate == messageDate) {
+            alreadyStartedConversationToday = true;
+            update();
+          }
           await db.collection('message').doc(doc_id).update({
             'last_time': Timestamp.now(),
             'last_msg': sendContent.message,
-            'from_unread_msg': fromUnreadMsg
+            'from_unread_msg': fromUnreadMsg,
+            'alreadyStartedConversationToday': alreadyStartedConversationToday
           });
         });
-        print('The fromUnreadMsg is $fromUnreadMsg');
+        if (kDebugMode) {
+          print('The fromUnreadMsg is $fromUnreadMsg');
+        }
       }
     }
   }
@@ -226,6 +285,7 @@ class PersonalChatController extends GetxController {
     required String title,
     required String body,
     String? image,
+    required String token,
   }) async {
     final serviceAccountFileContent = <String, String>{
       "type": "service_account",
@@ -266,7 +326,7 @@ class PersonalChatController extends GetxController {
                 image: image,
               ),
             ),
-            token: to_token
+            token: token
             //     token, // only required If you want to send message to specific user.
             ),
       ),
@@ -303,6 +363,16 @@ class PersonalChatController extends GetxController {
   }
 
   sendImageMessage() async {
+     var dateTimeNow = DateTime.now();
+      var currentDate = DateFormat('yMd').format(dateTimeNow);
+      var lastMsgDate = DateFormat('yMd').format(DateTime.parse(last_time));
+      if(currentDate!=lastMsgDate){
+        alreadyStartedConversationToday=false;
+        update();
+        await db.collection('message').doc(doc_id).update({
+            'alreadyStartedConversationToday': alreadyStartedConversationToday
+          });
+      }
     if (userId == from_uid) {
       if (toActiveInPersonalChatScreen == true) {
         final sendContent = MsgContent(
@@ -310,7 +380,8 @@ class PersonalChatController extends GetxController {
             uid: userId,
             type: 'imageAndmessage',
             addtime: Timestamp.now(),
-            imgMessage: imageTextController.text.trim());
+            imgMessage: imageTextController.text.trim(),
+            isTheFirst: alreadyStartedConversationToday == true ? false : true);
         imageTextController.clear();
         Get.focusScope?.unfocus();
         await db
@@ -323,11 +394,26 @@ class PersonalChatController extends GetxController {
                     msgcontent.toFirestore())
             .add(sendContent)
             .then((value) async {
+          sendNotificationMsg(
+              title: from_name,
+              body: sendContent.imgMessage ?? '[image]',
+              image: from_imgUrl,
+              token: to_token);
           Get.back();
+          var now = DateTime.now();
+          var messageDateTime = sendContent.addtime!.toDate();
+          var todaysDate = DateFormat('yMd').format(now);
+          var messageDate = DateFormat('yMd').format(messageDateTime);
+          if (todaysDate == messageDate &&
+              alreadyStartedConversationToday == false) {
+            alreadyStartedConversationToday = true;
+            update();
+          }
           await db.collection('message').doc(doc_id).update({
             'last_time': Timestamp.now(),
             'last_msg': '[photo]',
-            'to_unread_msg': 0
+            'to_unread_msg': 0,
+            'alreadyStartedConversationToday': alreadyStartedConversationToday
           });
         });
       } else {
@@ -338,7 +424,8 @@ class PersonalChatController extends GetxController {
             uid: userId,
             type: 'imageAndmessage',
             addtime: Timestamp.now(),
-            imgMessage: imageTextController.text.trim());
+            imgMessage: imageTextController.text.trim(),
+            isTheFirst: alreadyStartedConversationToday == true ? false : true);
         imageTextController.clear();
         Get.focusScope?.unfocus();
         await db
@@ -351,13 +438,27 @@ class PersonalChatController extends GetxController {
                     msgcontent.toFirestore())
             .add(sendContent)
             .then((value) async {
+              sendNotificationMsg(
+              title: from_name,
+              body: sendContent.imgMessage ?? '[image]',
+              image: from_imgUrl,
+              token: to_token);
           Get.back();
+          var now = DateTime.now();
+          var messageDateTime = sendContent.addtime!.toDate();
+          var todaysDate = DateFormat('yMd').format(now);
+          var messageDate = DateFormat('yMd').format(messageDateTime);
+          if (todaysDate == messageDate &&
+              alreadyStartedConversationToday == false) {
+            alreadyStartedConversationToday = true;
+            update();
+          }
           await db.collection('message').doc(doc_id).update({
             'last_time': Timestamp.now(),
             'last_msg': '[photo]',
-            'to_unread_msg': toUnreadMsg
+            'to_unread_msg': toUnreadMsg,
+            'alreadyStartedConversationToday': alreadyStartedConversationToday
           });
-          print('To unread msg is $toUnreadMsg');
         });
       }
     }
@@ -369,7 +470,8 @@ class PersonalChatController extends GetxController {
             uid: userId,
             type: 'imageAndmessage',
             addtime: Timestamp.now(),
-            imgMessage: imageTextController.text.trim());
+            imgMessage: imageTextController.text.trim(),
+            isTheFirst: alreadyStartedConversationToday == true ? false : true);
         imageTextController.clear();
         Get.focusScope?.unfocus();
         await db
@@ -382,11 +484,27 @@ class PersonalChatController extends GetxController {
                     msgcontent.toFirestore())
             .add(sendContent)
             .then((value) async {
+              sendNotificationMsg(
+              title: to_name,
+              body: sendContent.imgMessage ?? '[image]',
+              image: to_imgUrl,
+              token: from_token);
           Get.back();
+          update();
+          var now = DateTime.now();
+          var messageDateTime = sendContent.addtime!.toDate();
+          var todaysDate = DateFormat('yMd').format(now);
+          var messageDate = DateFormat('yMd').format(messageDateTime);
+          if (todaysDate == messageDate &&
+              alreadyStartedConversationToday == false) {
+            alreadyStartedConversationToday = true;
+            update();
+          }
           await db.collection('message').doc(doc_id).update({
             'last_time': Timestamp.now(),
             'last_msg': '[photo]',
-            'from_unread_msg': 0
+            'from_unread_msg': 0,
+            'alreadyStartedConversationToday': alreadyStartedConversationToday
           });
         });
       } else {
@@ -397,7 +515,8 @@ class PersonalChatController extends GetxController {
             uid: userId,
             type: 'imageAndmessage',
             addtime: Timestamp.now(),
-            imgMessage: imageTextController.text.trim());
+            imgMessage: imageTextController.text.trim(),
+            isTheFirst: alreadyStartedConversationToday == true ? false : true);
         imageTextController.clear();
         Get.focusScope?.unfocus();
         await db
@@ -410,11 +529,26 @@ class PersonalChatController extends GetxController {
                     msgcontent.toFirestore())
             .add(sendContent)
             .then((value) async {
+              sendNotificationMsg(
+              title: to_name,
+              body: sendContent.imgMessage ?? '[image]',
+              image: to_imgUrl,
+              token: from_token);
+              update();
           Get.back();
+          var now = DateTime.now();
+          var messageDateTime = sendContent.addtime!.toDate();
+          var todaysDate = DateFormat('yMd').format(now);
+          var messageDate = DateFormat('yMd').format(messageDateTime);
+          if (todaysDate == messageDate) {
+            alreadyStartedConversationToday = true;
+            update();
+          }
           await db.collection('message').doc(doc_id).update({
             'last_time': Timestamp.now(),
             'last_msg': '[photo]',
-            'from_unread_msg': fromUnreadMsg
+            'from_unread_msg': fromUnreadMsg,
+            'alreadyStartedConversationToday': alreadyStartedConversationToday
           });
         });
       }
@@ -428,15 +562,22 @@ class PersonalChatController extends GetxController {
       image = XFile(pickedImg.path);
       pickedFile = File(image!.path);
       update();
-      if(pickedImg.path.endsWith('.jpg')|| pickedImg.path.endsWith('.jpeg') || pickedImg.path.endsWith('.png') || pickedImg.path.endsWith('.gif')){
-      uploadImage(pickedFile);
-      }else{
+      if (pickedImg.path.endsWith('.jpg') ||
+          pickedImg.path.endsWith('.jpeg') ||
+          pickedImg.path.endsWith('.png') ||
+          pickedImg.path.endsWith('.gif')) {
+        uploadImage(pickedFile);
+      } else {
         uploadVideo(pickedFile);
       }
       print('image picked with the path ${pickedImg.path}');
       update();
-      
     }
+  }
+
+  pickVideo() async {
+    final pickedVideo = await picker.pickVideo(source: ImageSource.gallery);
+    if (pickedFile != null) {}
   }
 
   uploadImage(File? imageFile) async {
@@ -444,7 +585,8 @@ class PersonalChatController extends GetxController {
     update();
     if (imageFile != null) {
       var imagePath = imageFile.path;
-      final storageRef = FirebaseStorage.instance.ref('chat').child('uploaded/images');
+      final storageRef =
+          FirebaseStorage.instance.ref('chat').child('uploaded/images');
       storageRef.putFile(imageFile).snapshotEvents.listen((event) async {
         switch (event.state) {
           case TaskState.running:
@@ -464,7 +606,7 @@ class PersonalChatController extends GetxController {
           case TaskState.success:
             print('uploaded');
 
-            await getImgUrl(imageFile.path).then((value) {
+            await getImgUrl(imagePath).then((value) {
               isUploadingImage = false;
               update();
             });
@@ -473,12 +615,13 @@ class PersonalChatController extends GetxController {
     }
   }
 
- uploadVideo(File? videoFile) async {
+  uploadVideo(File? videoFile) async {
     isUploadingVideo = true;
     update();
     if (videoFile != null) {
       var videoPath = videoFile.path;
-      final storageRef = FirebaseStorage.instance.ref('chat').child('uploaded/videos');
+      final storageRef =
+          FirebaseStorage.instance.ref('chat').child('uploaded/videos');
       storageRef.putFile(videoFile).snapshotEvents.listen((event) async {
         switch (event.state) {
           case TaskState.running:
@@ -506,13 +649,17 @@ class PersonalChatController extends GetxController {
       });
     }
   }
-   Future<void> getVideoUrl(String videoPath) async {
-    final spaceRef = FirebaseStorage.instance.ref('chat').child('uploaded/videos');
+
+  Future<void> getVideoUrl(String videoPath) async {
+    final spaceRef =
+        FirebaseStorage.instance.ref('chat').child('uploaded/videos');
     videoUrl = await spaceRef.getDownloadURL();
     update();
   }
+
   Future<void> getImgUrl(String imgPath) async {
-    final spaceRef = FirebaseStorage.instance.ref('chat').child('uploaded/images');
+    final spaceRef =
+        FirebaseStorage.instance.ref('chat').child('uploaded/images');
     imgUrl = await spaceRef.getDownloadURL();
     update();
   }

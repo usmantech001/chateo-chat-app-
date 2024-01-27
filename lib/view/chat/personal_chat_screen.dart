@@ -130,7 +130,19 @@ class PersonalChatScreen extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(left: 10.w, bottom: 15.h),
                         child: GestureDetector(
-                            onTap: () => personalChatController.pickImage(),
+                            onTap: () => Get.bottomSheet(
+                              Container(
+                                padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 20.h, bottom: 20.h),
+                              height: 200.h,
+                              color: Colors.white,
+                              child:Column(
+                                children: [
+                                  fileRow(icon: Icons.photo_outlined, name: 'Galarry', onTap: () => personalChatController.pickImage(),),
+                                  fileRow(icon: Icons.camera_enhance, name: 'Camera', onTap: () => null,),
+                                  fileRow(icon: Icons.video_file, name: 'Video', onTap: () => null,),
+                                ],
+                              )
+                            )),
                             child: Icon(
                               Icons.image_outlined,
                               size: 30.sp,

@@ -3,17 +3,23 @@ import 'package:intl/intl.dart';
 String timeFormat(DateTime time){
   var now = DateTime.now();
   var diff = now.difference(time);
-  if(diff.inMinutes < 60){
-    return "${diff.inMinutes} m ago";
-  }else if(diff.inHours < 24){
-    return "${diff.inHours} h ago";
-  }else if(diff.inDays < 30){
-    return "${diff.inDays} d ago";
-  }else if(diff.inDays < 365){
-      final format = DateFormat('MM-dd');
-    return  format.format(time);
+  if(diff.inDays == 0){
+    return DateFormat().add_jm().format(time);
+  }else if(diff.inDays==1){
+    return "Yesterday";
   }else{
-    final format = DateFormat('yyyy-MM-dd');
-    return format.format(time);
+    return DateFormat('yMd').format(time);
+  }
+ }
+
+String timeFormat2(DateTime time){
+  var now = DateTime.now();
+  var diff = now.difference(time);
+  if(diff.inDays == 0){
+    return 'Today';
+  }else if(diff.inDays==1){
+    return "Yesterday";
+  }else{
+    return DateFormat('yMd').format(time);
   }
  }

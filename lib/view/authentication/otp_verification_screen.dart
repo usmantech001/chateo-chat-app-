@@ -58,7 +58,7 @@ class OtpVerificationScreen extends StatelessWidget {
                
 
                           SizedBox(height: 20.h,),
-                            reusableText(text: 'Didn’t receive a code? ',),
+                            reusableText(text: 'Didn\'t receive a code? ',),
                             SizedBox(height: 30.h,),
                             button(text: 'Resend Code', onTap: (){
                               authController.verifyPhoneNumber(otpController.phoneNumber);
@@ -66,7 +66,7 @@ class OtpVerificationScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    authController.isVerifyingOtp==true?Positioned(
+                    otpController.isVerifyingOtp==true?Positioned(
                   top: (MediaQuery.sizeOf(context).height/2)-100.h,
                   left:( MediaQuery.sizeOf(context).width/2)-15.w,
                  // right: MediaQuery.sizeOf(context).width/2 ,

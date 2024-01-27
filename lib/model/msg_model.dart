@@ -15,6 +15,7 @@ class Msg{
   int? from_unread_msg;
   int? to_unread_msg;
   Timestamp? last_time;
+  bool? alreadyStartedConversationToday;
 
   Msg({
     this.from_uid,
@@ -27,7 +28,9 @@ class Msg{
     this.to_unread_msg,
     this.from_imgUrl,
     this.to_imgUrl,
-    
+    this.from_token,
+    this.to_token,
+    this.alreadyStartedConversationToday
   });
 
   Msg.fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot, SnapshotOptions? optionsfinal){
@@ -43,6 +46,9 @@ class Msg{
       last_time = data['last_time'];
       from_imgUrl = data['from_imgUrl'];
       to_imgUrl = data['to_imgUrl'];
+      from_token = data['from_token'];
+      to_token = data['to_token'];
+      alreadyStartedConversationToday = data['alreadyStartedConversationToday'];
       
     }
   }
@@ -58,6 +64,9 @@ class Msg{
       'last_time' : last_time,
       'from_imgUrl' : from_imgUrl,
       'to_imgUrl' : to_imgUrl,
+      'from_token' : from_token,
+      'to_token' : to_token,
+      'alreadyStartedConversationToday' : alreadyStartedConversationToday
     };
   }
 }
@@ -68,13 +77,15 @@ class MsgContent{
   String? type;
   String? imgMessage;
   Timestamp? addtime;
+  bool? isTheFirst;
 
   MsgContent({
     this.message,
   this.addtime,
   this.type,
   this.uid,
-  this.imgMessage
+  this.imgMessage,
+  this.isTheFirst,
   });
 
   MsgContent.fromFirestore(DocumentSnapshot<Map<String, dynamic>> snapshot, SnapshotOptions? optionsfinal){
@@ -85,6 +96,7 @@ class MsgContent{
       message = data['message'];
       addtime = data['addtime'];
       imgMessage = data['imgMessage'];
+      isTheFirst = data['isTheFirst'];
     }
   }
   Map<String, dynamic> toFirestore(){
@@ -93,7 +105,8 @@ class MsgContent{
       'message' : message,
       'type' : type,
       'addtime' : addtime,
-      'imgMessage': imgMessage
+      'imgMessage': imgMessage,
+      'isTheFirst' :isTheFirst
     };
   }
 }

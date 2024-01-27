@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 class OtpController extends GetxController{
   late String verificationId;
   late String phoneNumber;
+  bool isVerifyingOtp = false;
   @override
   void onInit() {
     // TODO: implement onInit
@@ -13,6 +14,10 @@ class OtpController extends GetxController{
   }
 
   verifyOtp(smsCode, ) async {
+    isVerifyingOtp = true;
+    update();
   await AuthController.instance.verifyOtp(verificationId, smsCode, phoneNumber);
+   isVerifyingOtp = false;
+    update();
   }
 }

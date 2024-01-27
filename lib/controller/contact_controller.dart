@@ -169,6 +169,7 @@ class ContactController extends GetxController {
           from_uid: userProfile.id,
           to_uid: to_userdata.id,
           last_msg: '',
+          alreadyStartedConversationToday: false,
           last_time: Timestamp.now(),
           from_unread_msg: 0,
           to_unread_msg: 0);
@@ -225,7 +226,8 @@ class ContactController extends GetxController {
           'meActiveInPersonalChatScreen':
               meActiveInPersonalChatScreen.toString(),
           'toActiveInPersonalChatScreen':
-              toActiveInPersonalChatScreen.toString()
+              toActiveInPersonalChatScreen.toString(),
+              'alreadyStartedConversationToday' : from_messages.docs.first.data().alreadyStartedConversationToday.toString()
         });
       }
       if (to_messages.docs.isNotEmpty) {
@@ -254,7 +256,8 @@ class ContactController extends GetxController {
           'meActiveInPersonalChatScreen':
               meActiveInPersonalChatScreen.toString(),
           'toActiveInPersonalChatScreen':
-              toActiveInPersonalChatScreen.toString()
+              toActiveInPersonalChatScreen.toString(),
+              'alreadyStartedConversationToday' : from_messages.docs.first.data().alreadyStartedConversationToday.toString()
         });
       }
     }

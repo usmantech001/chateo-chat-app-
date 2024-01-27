@@ -128,8 +128,6 @@ class AuthController extends GetxController{
   try{
      final userCredential= await auth.signInWithCredential(PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode));
      if(userCredential.user!=null){
-      // var token =await userCredential.user!.getIdToken();
-      //  print('The token is ${token}');
       isVerifyingOtp =false;
       update();
 
