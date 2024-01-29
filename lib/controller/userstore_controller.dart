@@ -38,13 +38,24 @@ class UserStore extends GetxController{
     return  StorageService.instance.getString(AppConstants.SAVE_USER_ID);
     }
 
+    String getLastMsgDate(){
+    return  StorageService.instance.getString(AppConstants.SAVE_LAST_MSG_TIME);
+    }
+
     Future<void> login(bool value) async{
      await StorageService.instance.setBool(AppConstants.IS_LOGIN, value);
+    }
+    Future<void> saveLastMsgTime(String lastMsgTime) async {
+      await StorageService.instance.setString(AppConstants.SAVE_LAST_MSG_TIME, lastMsgTime);
     }
     removeKey(){
       StorageService.instance.removeKey(AppConstants.IS_LOGIN);
       StorageService.instance.removeKey(AppConstants.SAVE_USER_ID);
       StorageService.instance.removeKey(AppConstants.SAVE_USER_PROFILE);
     }
+    removeLastMsgDate(){
+      StorageService.instance.removeKey(AppConstants.SAVE_LAST_MSG_TIME);
+    }
+    
     
 }

@@ -41,6 +41,7 @@ class ContactController extends GetxController {
   bool toActiveInPersonalChatScreen = false;
   int from_unread = 0;
   int to_unread = 0;
+  String token = '';
 
   getContacts() async {
     List<Contact> contacts = await ContactsService.getContacts();
@@ -172,7 +173,11 @@ class ContactController extends GetxController {
           alreadyStartedConversationToday: false,
           last_time: Timestamp.now(),
           from_unread_msg: 0,
-          to_unread_msg: 0);
+          to_unread_msg: 0,
+          from_token: userProfile.deviceToken,
+          to_token: to_userdata.token,
+          to_imgUrl: to_userdata.imgUrl
+          );
       await db
           .collection('message')
           .withConverter(
@@ -189,6 +194,8 @@ class ContactController extends GetxController {
           'to_token': to_userdata.token ?? '',
           'from_name': userProfile.firstName ?? '',
           'from_imgUrl': userProfile.imgUrl ?? '',
+          'from_token': userProfile.deviceToken??'',
+          'last_time' : msg.last_time!.toDate().toString(),
           'meActiveInPersonalChatScreen': msg.from_uid == userProfile.id
               ? true.toString()
               : false.toString(),
@@ -218,11 +225,13 @@ class ContactController extends GetxController {
           'to_uid': to_userdata.id ?? '',
           'to_name': to_userdata.firstName ?? '',
           'imgUrl': to_userdata.imgUrl ?? '',
+          'from_token': userProfile.deviceToken??'',
           'to_token': to_userdata.token ?? '',
           'from_name': userProfile.firstName ?? '',
           'from_imgUrl': userProfile.imgUrl ?? '',
           'from_unread_msg': from_unread.toString(),
           'to_unread_msg': to_unread.toString(),
+          'last_time' : from_messages.docs.first.data().last_time!.toDate().toString(),
           'meActiveInPersonalChatScreen':
               meActiveInPersonalChatScreen.toString(),
           'toActiveInPersonalChatScreen':
@@ -250,9 +259,11 @@ class ContactController extends GetxController {
           'to_uid': to_userdata.id ?? '',
           'to_name': to_userdata.firstName ?? '',
           'to_imgUrl': to_userdata.imgUrl ?? '',
+          'from_token': userProfile.deviceToken??'',
           'to_token': to_userdata.token ?? '',
           'from_name': userProfile.firstName ?? '',
           'from_imgUrl': userProfile.imgUrl ?? '',
+          'last_time' : to_messages.docs.first.data().last_time!.toDate().toString(),
           'meActiveInPersonalChatScreen':
               meActiveInPersonalChatScreen.toString(),
           'toActiveInPersonalChatScreen':

@@ -8,6 +8,7 @@ import 'package:chateo/widgets/widgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 // ignore: non_constant_identifier_names
@@ -20,11 +21,11 @@ Widget ChatRight(MsgContent msgContent) {
         ConstrainedBox(
           constraints: msgContent.type == 'text'
               ? BoxConstraints(
-                  maxHeight: 400.h,
+                  maxHeight: MediaQuery.sizeOf(Get.context!).height,
                   maxWidth: 230.w,
-                  minWidth: 100.w,
+                  minWidth: 60.w,
                 )
-              : BoxConstraints(maxHeight: 400.h, maxWidth: 230.w),
+              : BoxConstraints(maxHeight: MediaQuery.sizeOf(Get.context!).height, maxWidth: 230.w),
           child: Container(
             padding: msgContent.type == 'text'
                 ? EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h)
@@ -105,7 +106,7 @@ Widget ChatRight1(MsgContent msgContent, DateTime time) {
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(10)),
         child: Text(
-          timeFormat2(time),
+          timeFormat(time),
           style: const TextStyle(color: Colors.grey),
         ),
       ),
@@ -119,7 +120,7 @@ Widget ChatRight1(MsgContent msgContent, DateTime time) {
                   ? BoxConstraints(
                       maxHeight: 400.h,
                       maxWidth: 230.w,
-                      minWidth: 100.w,
+                      minWidth: 60.w,
                     )
                   : BoxConstraints(maxHeight: 400.h, maxWidth: 230.w),
               child: Container(

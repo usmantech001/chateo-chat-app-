@@ -20,7 +20,7 @@ Widget ChatLeft(MsgContent msgContent){
          constraints:msgContent.type=='text'? BoxConstraints(
             maxHeight: 400.h,
             maxWidth: 230.w,
-            minWidth: 100.w,
+            minWidth: 60.w,
            
           ):BoxConstraints(
             maxHeight: 400.h,
@@ -86,7 +86,7 @@ Widget ChatLeft1(MsgContent msgContent, DateTime time){
           )
         ),
         child: Text(
-          timeFormat2(time), 
+          timeFormat(time), 
           style: const TextStyle(
           color: Colors.grey
         ),),
@@ -100,7 +100,7 @@ Widget ChatLeft1(MsgContent msgContent, DateTime time){
              constraints:msgContent.type=='text'? BoxConstraints(
                 maxHeight: 400.h,
                 maxWidth: 230.w,
-                minWidth: 100.w,
+                minWidth: 60.w,
                
               ):BoxConstraints(
                 maxHeight: 400.h,

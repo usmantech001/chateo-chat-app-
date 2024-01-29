@@ -23,10 +23,11 @@ class PersonalChatController extends GetxController {
   String from_name = '';
   String from_imgUrl = '';
   String from_uid = '';
-  String last_time= '';
+  String last_time= UserStore.instance.getLastMsgDate();
   XFile? image;
   File? pickedFile;
   late String userId;
+  bool isFieldEmpty = true;
   final msgScrollController = ScrollController();
   final messasgeController = TextEditingController();
   final imageTextController = TextEditingController();
@@ -43,7 +44,7 @@ class PersonalChatController extends GetxController {
   bool isUploadingImage = false;
   bool isUploadingVideo = false;
   bool isGettingImgUrl = false;
-  bool alreadyStartedConversationToday = false;
+  bool alreadyStartedConversationToday = true;
 
   @override
   void onInit() {
@@ -88,6 +89,7 @@ class PersonalChatController extends GetxController {
   void onReady() {
     super.onReady();
     retrieveSentMessage();
+    print('onReady called');
   }
 
   @override
@@ -101,11 +103,28 @@ class PersonalChatController extends GetxController {
         {'from_unread_msg': fromUnreadMsg, 'to_unread_msg': toUnreadMsg});
   }
 
+  checkIfTextFieldIsEmpty(String value){
+    if(value.isEmpty){
+      isFieldEmpty=true;
+      update();
+    }else{
+      isFieldEmpty=false;
+      update();
+    }
+  }
+
   sendMessage() async {
      var dateTimeNow = DateTime.now();
       var currentDate = DateFormat('yMd').format(dateTimeNow);
+
       var lastMsgDate = DateFormat('yMd').format(DateTime.parse(last_time));
       if(currentDate!=lastMsgDate){
+        alreadyStartedConversationToday=false;
+        update();
+        await db.collection('message').doc(doc_id).update({
+            'alreadyStartedConversationToday': alreadyStartedConversationToday
+          });
+      }else if(currentDate == lastMsgDate && msgList.isEmpty){
         alreadyStartedConversationToday=false;
         update();
         await db.collection('message').doc(doc_id).update({
@@ -132,6 +151,7 @@ class PersonalChatController extends GetxController {
                     msgcontent.toFirestore())
             .add(sendContent)
             .then((value) async {
+              UserStore.instance.saveLastMsgTime(sendContent.addtime!.toDate().toString());
           sendNotificationMsg(
               title: from_name, body: sendContent.message!, image: from_imgUrl, token: to_token);
           update();
@@ -173,6 +193,7 @@ class PersonalChatController extends GetxController {
                     msgcontent.toFirestore())
             .add(sendContent)
             .then((value) async {
+              UserStore.instance.saveLastMsgTime(sendContent.addtime!.toDate().toString());
           sendNotificationMsg(
               title: from_name, body: sendContent.message!, image: from_imgUrl, token: to_token);
           update();
@@ -180,7 +201,7 @@ class PersonalChatController extends GetxController {
           var messageDateTime = sendContent.addtime!.toDate();
           var todaysDate = DateFormat('yMd').format(now);
           var messageDate = DateFormat('yMd').format(messageDateTime);
-          if (todaysDate == messageDate) {
+          if (todaysDate == messageDate &&alreadyStartedConversationToday == false) {
             alreadyStartedConversationToday = true;
             update();
           }
@@ -215,6 +236,7 @@ class PersonalChatController extends GetxController {
                     msgcontent.toFirestore())
             .add(sendContent)
             .then((value) async {
+              UserStore.instance.saveLastMsgTime(sendContent.addtime!.toDate().toString());
           sendNotificationMsg(
               title: to_name, body: sendContent.message!, image: to_imgUrl, token: from_token);
           // unreadMsg++;
@@ -223,7 +245,7 @@ class PersonalChatController extends GetxController {
           var messageDateTime = sendContent.addtime!.toDate();
           var todaysDate = DateFormat('yMd').format(now);
           var messageDate = DateFormat('yMd').format(messageDateTime);
-          if (todaysDate == messageDate) {
+          if (todaysDate == messageDate &&alreadyStartedConversationToday == false) {
             alreadyStartedConversationToday = true;
             update();
           }
@@ -256,6 +278,7 @@ class PersonalChatController extends GetxController {
                     msgcontent.toFirestore())
             .add(sendContent)
             .then((value) async {
+              UserStore.instance.saveLastMsgTime(sendContent.addtime!.toDate().toString());
           sendNotificationMsg(
               title: to_name, body: sendContent.message!, image: to_imgUrl, token: from_token);
           update();
@@ -263,7 +286,7 @@ class PersonalChatController extends GetxController {
           var messageDateTime = sendContent.addtime!.toDate();
           var todaysDate = DateFormat('yMd').format(now);
           var messageDate = DateFormat('yMd').format(messageDateTime);
-          if (todaysDate == messageDate) {
+          if (todaysDate == messageDate &&alreadyStartedConversationToday == false) {
             alreadyStartedConversationToday = true;
             update();
           }
@@ -363,10 +386,17 @@ class PersonalChatController extends GetxController {
   }
 
   sendImageMessage() async {
-     var dateTimeNow = DateTime.now();
+      var dateTimeNow = DateTime.now();
       var currentDate = DateFormat('yMd').format(dateTimeNow);
+
       var lastMsgDate = DateFormat('yMd').format(DateTime.parse(last_time));
       if(currentDate!=lastMsgDate){
+        alreadyStartedConversationToday=false;
+        update();
+        await db.collection('message').doc(doc_id).update({
+            'alreadyStartedConversationToday': alreadyStartedConversationToday
+          });
+      }else if(currentDate == lastMsgDate && msgList.isEmpty){
         alreadyStartedConversationToday=false;
         update();
         await db.collection('message').doc(doc_id).update({
@@ -394,6 +424,7 @@ class PersonalChatController extends GetxController {
                     msgcontent.toFirestore())
             .add(sendContent)
             .then((value) async {
+              UserStore.instance.saveLastMsgTime(sendContent.addtime!.toDate().toString());
           sendNotificationMsg(
               title: from_name,
               body: sendContent.imgMessage ?? '[image]',
@@ -438,6 +469,7 @@ class PersonalChatController extends GetxController {
                     msgcontent.toFirestore())
             .add(sendContent)
             .then((value) async {
+              UserStore.instance.saveLastMsgTime(sendContent.addtime!.toDate().toString());
               sendNotificationMsg(
               title: from_name,
               body: sendContent.imgMessage ?? '[image]',
@@ -484,6 +516,7 @@ class PersonalChatController extends GetxController {
                     msgcontent.toFirestore())
             .add(sendContent)
             .then((value) async {
+              UserStore.instance.saveLastMsgTime(sendContent.addtime!.toDate().toString());
               sendNotificationMsg(
               title: to_name,
               body: sendContent.imgMessage ?? '[image]',
@@ -529,6 +562,7 @@ class PersonalChatController extends GetxController {
                     msgcontent.toFirestore())
             .add(sendContent)
             .then((value) async {
+              UserStore.instance.saveLastMsgTime(sendContent.addtime!.toDate().toString());
               sendNotificationMsg(
               title: to_name,
               body: sendContent.imgMessage ?? '[image]',
@@ -540,7 +574,7 @@ class PersonalChatController extends GetxController {
           var messageDateTime = sendContent.addtime!.toDate();
           var todaysDate = DateFormat('yMd').format(now);
           var messageDate = DateFormat('yMd').format(messageDateTime);
-          if (todaysDate == messageDate) {
+          if (todaysDate == messageDate &&alreadyStartedConversationToday == false) {
             alreadyStartedConversationToday = true;
             update();
           }
@@ -667,9 +701,13 @@ class PersonalChatController extends GetxController {
   leavePersonalChat() {
     if (userId == from_uid) {
       meActiveInPersonalChatScreen = false;
+      UserStore.instance.removeLastMsgDate();
+      last_time = '';
       update();
     } else {
       toActiveInPersonalChatScreen = false;
+       UserStore.instance.removeLastMsgDate();
+      last_time = '';
       update();
     }
   }

@@ -147,7 +147,8 @@ class ChatListController extends GetxController {
       'to_unread_msg': to_unread_msg.toString(),
       'toActiveInPersonalChatScreen' : toActiveInPersonalChatScreen.toString(),
       'meActiveInPersonalChatScreen' : meActiveInPersonalChatScreen.toString(),
-       'alreadyStartedConversationToday' : user.data()!.alreadyStartedConversationToday.toString()
+       'alreadyStartedConversationToday' : user.data()!.alreadyStartedConversationToday.toString(),
+       'last_time' : user.data()!.last_time!.toDate().toString()
     });
   }
 
@@ -187,3 +188,5 @@ print('There is no connection');
   }
 
 }
+
+//imgUrl(users) == ''

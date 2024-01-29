@@ -15,7 +15,6 @@ class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     NotificationController.instance;
-    // final chatListController = ChatListController.instance;
     return GetBuilder<ChatListController>(builder: (chatListController) {
       return Scaffold(
           backgroundColor: Colors.white,
@@ -72,7 +71,7 @@ class ChatScreen extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      chatListController.imgUrl(users) == ''
+                                      chatListController.imgUrl(users)==''
                                           ? CircleAvatar(
                                               radius: 27.sp,
                                               
@@ -157,7 +156,7 @@ class ChatScreen extends StatelessWidget {
                                               text: timeFormat((users
                                                       .data()!
                                                       .last_time as Timestamp)
-                                                  .toDate()),
+                                                  .toDate(), fomChat: true),
                                               color: const Color(0xFFADB5BD),
                                               fontSize: 14.w,
                                               fontWeight: FontWeight.w600,

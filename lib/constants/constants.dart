@@ -14,4 +14,5 @@ class AppConstants{
   static const SAVE_USER_ID = 'save_user_id';
   static const IS_LOGIN = 'is_login';
   static const SAVE_CONTACT_LIST = 'save_contact_list';
+  static const SAVE_LAST_MSG_TIME = 'save_last_msg_time';
 }

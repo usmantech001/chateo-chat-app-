@@ -110,10 +110,11 @@ class PersonalChatScreen extends StatelessWidget {
                             expands: false,
                             maxLines: 7,
                             minLines: 1,
+                            onChanged: personalChatController.checkIfTextFieldIsEmpty,
                             keyboardType: TextInputType.multiline,
                             decoration: const InputDecoration(
                               isDense: true,
-                              hintText: 'send message...',
+                              hintText: 'Send message...',
                               hintStyle:
                                   TextStyle(color: AppColors.hintTextColor),
                               //prefixIcon: Icon(Icons.person),
@@ -137,7 +138,11 @@ class PersonalChatScreen extends StatelessWidget {
                               color: Colors.white,
                               child:Column(
                                 children: [
-                                  fileRow(icon: Icons.photo_outlined, name: 'Galarry', onTap: () => personalChatController.pickImage(),),
+                                  fileRow(icon: Icons.photo_outlined, name: 'Gallery', onTap: () {
+                                    personalChatController.pickImage();
+                                    Get.back();
+                                  } 
+                                  ),
                                   fileRow(icon: Icons.camera_enhance, name: 'Camera', onTap: () => null,),
                                   fileRow(icon: Icons.video_file, name: 'Video', onTap: () => null,),
                                 ],
@@ -157,7 +162,7 @@ class PersonalChatScreen extends StatelessWidget {
                                 personalChatController.sendMessage();
                               }
                             },
-                            child: Image.asset(
+                            child:personalChatController.isFieldEmpty?Icon(Icons.mic, size: 35.sp, color: AppColors.MainColor,): Image.asset(
                               'assets/images/send.png',
                               height: 35,
                               width: 35,

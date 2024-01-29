@@ -31,7 +31,14 @@ class OtpVerificationScreen extends StatelessWidget {
                           SizedBox(height: 10.h,),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 20.w),
-                            child: reusableText(text: 'We have sent you an SMS with the code to ${otpController.phoneNumber}',color: Colors.black45 ),
+                            child: Text(
+                               'We have sent you an SMS with the code to ${otpController.phoneNumber}',
+                               textAlign: TextAlign.center,
+                             style: TextStyle(
+                               color: Colors.black45 ,
+                               fontSize: 18.sp,
+                               
+                             ),),
                           ),
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 25.h),
